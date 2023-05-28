@@ -34,6 +34,16 @@ class HeroAdmin(admin.ModelAdmin):
 #actions = ["export_as_csv"]
 
     # how to export selected records to csv
+    
+    # This code has nothing specific about to Hero, therefore it can be encapsulated in 
+    # a mixin and make it available to all entities
+    ## class ExportCsvMixin: 
+    # and then make available to each entity like this: 
+    ## class HeroAdmin(admin.ModelAdmin, ExportCsvMixin):
+    ## list_display = ...........
+    ## list_filter = ............
+    ## actions = ["export_as_csv"] 
+     
     def export_as_csv(self, request, queryset): 
         
         meta = self.model._meta
@@ -52,9 +62,13 @@ class HeroAdmin(admin.ModelAdmin):
 
     export_as_csv.short_description = "Export Selected"
 
+# In case you need to remove the Delete Selected from the menu of a model 
 
-
-
+    def get_actions(self, request): 
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions: 
+            del actions['delete_selected']
+        return actions
 
 
     
